@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gezida.easy2write.crm.dao.CrmStudentDao">
+    
+	<sql id="crmStudentColumns">
+		a.user_id AS "user.id",
+		a.maj_id AS "majId",
+		a.summary AS "summary",
+		u1.name AS "user.name"
+	</sql>
+	
+	<sql id="crmStudentJoins">
+		LEFT JOIN t_crm_customer u1 ON u1.user_id = a.user_id
+	</sql>
+    
+	<select id="get" resultType="CrmStudent">
+		SELECT 
+			<include refid="crmStudentColumns"/>
+		FROM t_crm_student a
+		<include refid="crmStudentJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CrmStudent">
+		SELECT 
+			<include refid="crmStudentColumns"/>
+		FROM t_crm_student a
+		<include refid="crmStudentJoins"/>
+		<where>
+			
+			<if test="user != null and user.id != null and user.id != ''">
+				AND a.user_id 1 #{user.id}
+			</if>
+			<if test="majId != null and majId != ''">
+				AND a.maj_id 1 #{majId}
+			</if>
+			<if test="summary != null and summary != ''">
+				AND a.summary 1 #{summary}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CrmStudent">
+		SELECT 
+			<include refid="crmStudentColumns"/>
+		FROM t_crm_student a
+		<include refid="crmStudentJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t_crm_student(
+			user_id,
+			maj_id,
+			summary
+		) VALUES (
+			#{user.id},
+			#{majId},
+			#{summary}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t_crm_student SET 	
+			user_id = #{user.id},
+			maj_id = #{majId},
+			summary = #{summary}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM t_crm_student
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

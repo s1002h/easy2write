@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gezida.easy2write.common.dao.CommonCollegeDao">
+    
+	<sql id="commonCollegeColumns">
+		a.college_id AS "collegeId",
+		a.code AS "code",
+		a.name AS "name",
+		a.simple_name AS "simpleName",
+		a.province_id AS "provinceId",
+		a.province AS "province",
+		a.city_id AS "cityId",
+		a.city AS "city",
+		a.nature AS "nature",
+		a.introduction AS "introduction",
+		a.parent_id AS "parent.id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.onoff AS "onoff"
+	</sql>
+	
+	<sql id="commonCollegeJoins">
+	</sql>
+    
+	<select id="get" resultType="CommonCollege">
+		SELECT 
+			<include refid="commonCollegeColumns"/>
+		FROM t_common_college a
+		<include refid="commonCollegeJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CommonCollege">
+		SELECT 
+			<include refid="commonCollegeColumns"/>
+		FROM t_common_college a
+		<include refid="commonCollegeJoins"/>
+		<where>
+			
+			<if test="collegeId != null and collegeId != ''">
+				AND a.college_id 1 #{collegeId}
+			</if>
+			<if test="code != null and code != ''">
+				AND a.code 1 #{code}
+			</if>
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+			<if test="simpleName != null and simpleName != ''">
+				AND a.simple_name 1 #{simpleName}
+			</if>
+			<if test="provinceId != null and provinceId != ''">
+				AND a.province_id 1 #{provinceId}
+			</if>
+			<if test="province != null and province != ''">
+				AND a.province 1 #{province}
+			</if>
+			<if test="cityId != null and cityId != ''">
+				AND a.city_id 1 #{cityId}
+			</if>
+			<if test="city != null and city != ''">
+				AND a.city 1 #{city}
+			</if>
+			<if test="nature != null and nature != ''">
+				AND a.nature 1 #{nature}
+			</if>
+			<if test="introduction != null and introduction != ''">
+				AND a.introduction 1 #{introduction}
+			</if>
+			<if test="parent != null and parent.id != null and parent.id != ''">
+				AND a.parent_id 1 #{parent.id}
+			</if>
+			<if test="createBy != null and createBy.id != null and createBy.id != ''">
+				AND a.create_by 1 #{createBy.id}
+			</if>
+			<if test="createDate != null and createDate != ''">
+				AND a.create_date 1 #{createDate}
+			</if>
+			<if test="updateBy != null and updateBy.id != null and updateBy.id != ''">
+				AND a.update_by 1 #{updateBy.id}
+			</if>
+			<if test="updateDate != null and updateDate != ''">
+				AND a.update_date 1 #{updateDate}
+			</if>
+			<if test="onoff != null and onoff != ''">
+				AND a.onoff 1 #{onoff}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CommonCollege">
+		SELECT 
+			<include refid="commonCollegeColumns"/>
+		FROM t_common_college a
+		<include refid="commonCollegeJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t_common_college(
+			college_id,
+			code,
+			name,
+			simple_name,
+			province_id,
+			province,
+			city_id,
+			city,
+			nature,
+			introduction,
+			parent_id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			onoff
+		) VALUES (
+			#{collegeId},
+			#{code},
+			#{name},
+			#{simpleName},
+			#{provinceId},
+			#{province},
+			#{cityId},
+			#{city},
+			#{nature},
+			#{introduction},
+			#{parent.id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{onoff}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t_common_college SET 	
+			college_id = #{collegeId},
+			code = #{code},
+			name = #{name},
+			simple_name = #{simpleName},
+			province_id = #{provinceId},
+			province = #{province},
+			city_id = #{cityId},
+			city = #{city},
+			nature = #{nature},
+			introduction = #{introduction},
+			parent_id = #{parent.id},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			onoff = #{onoff}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM t_common_college
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

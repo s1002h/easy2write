@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gezida.easy2write.order.dao.OrderComplaintsDao">
+    
+	<sql id="orderComplaintsColumns">
+		a.complaints_id AS "complaintsId",
+		a.order_id AS "orderId",
+		a.complaints_type AS "complaintsType",
+		a.complaints_content AS "complaintsContent",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.process_status AS "processStatus",
+		a.process_result AS "processResult",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate"
+	</sql>
+	
+	<sql id="orderComplaintsJoins">
+	</sql>
+    
+	<select id="get" resultType="OrderComplaints">
+		SELECT 
+			<include refid="orderComplaintsColumns"/>
+		FROM t_order_complaints a
+		<include refid="orderComplaintsJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="OrderComplaints">
+		SELECT 
+			<include refid="orderComplaintsColumns"/>
+		FROM t_order_complaints a
+		<include refid="orderComplaintsJoins"/>
+		<where>
+			
+			<if test="complaintsId != null and complaintsId != ''">
+				AND a.complaints_id 1 #{complaintsId}
+			</if>
+			<if test="orderId != null and orderId != ''">
+				AND a.order_id 1 #{orderId}
+			</if>
+			<if test="complaintsType != null and complaintsType != ''">
+				AND a.complaints_type 1 #{complaintsType}
+			</if>
+			<if test="complaintsContent != null and complaintsContent != ''">
+				AND a.complaints_content 1 #{complaintsContent}
+			</if>
+			<if test="createBy != null and createBy.id != null and createBy.id != ''">
+				AND a.create_by 1 #{createBy.id}
+			</if>
+			<if test="createDate != null and createDate != ''">
+				AND a.create_date 1 #{createDate}
+			</if>
+			<if test="processStatus != null and processStatus != ''">
+				AND a.process_status 1 #{processStatus}
+			</if>
+			<if test="processResult != null and processResult != ''">
+				AND a.process_result 1 #{processResult}
+			</if>
+			<if test="updateBy != null and updateBy.id != null and updateBy.id != ''">
+				AND a.update_by 1 #{updateBy.id}
+			</if>
+			<if test="updateDate != null and updateDate != ''">
+				AND a.update_date 1 #{updateDate}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="OrderComplaints">
+		SELECT 
+			<include refid="orderComplaintsColumns"/>
+		FROM t_order_complaints a
+		<include refid="orderComplaintsJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t_order_complaints(
+			complaints_id,
+			order_id,
+			complaints_type,
+			complaints_content,
+			create_by,
+			create_date,
+			process_status,
+			process_result,
+			update_by,
+			update_date
+		) VALUES (
+			#{complaintsId},
+			#{orderId},
+			#{complaintsType},
+			#{complaintsContent},
+			#{createBy.id},
+			#{createDate},
+			#{processStatus},
+			#{processResult},
+			#{updateBy.id},
+			#{updateDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t_order_complaints SET 	
+			complaints_id = #{complaintsId},
+			order_id = #{orderId},
+			complaints_type = #{complaintsType},
+			complaints_content = #{complaintsContent},
+			process_status = #{processStatus},
+			process_result = #{processResult},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM t_order_complaints
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

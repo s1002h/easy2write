@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gezida.easy2write.crm.dao.CrmCustomEduDao">
+    
+	<sql id="crmCustomEduColumns">
+		a.college_id AS "collegeId",
+		a.maj_id AS "majId",
+		a.user_id AS "user.id",
+		a.start_date AS "startDate",
+		a.end_date AS "endDate",
+		a.status AS "status",
+		a.update_date AS "updateDate",
+		u3.name AS "user.name"
+	</sql>
+	
+	<sql id="crmCustomEduJoins">
+		LEFT JOIN t_crm_customer u3 ON u3.user_id = a.user_id
+	</sql>
+    
+	<select id="get" resultType="CrmCustomEdu">
+		SELECT 
+			<include refid="crmCustomEduColumns"/>
+		FROM t_crm_custom_edu a
+		<include refid="crmCustomEduJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CrmCustomEdu">
+		SELECT 
+			<include refid="crmCustomEduColumns"/>
+		FROM t_crm_custom_edu a
+		<include refid="crmCustomEduJoins"/>
+		<where>
+			
+			<if test="collegeId != null and collegeId != ''">
+				AND a.college_id 1 #{collegeId}
+			</if>
+			<if test="majId != null and majId != ''">
+				AND a.maj_id 1 #{majId}
+			</if>
+			<if test="user != null and user.id != null and user.id != ''">
+				AND a.user_id 1 #{user.id}
+			</if>
+			<if test="startDate != null and startDate != ''">
+				AND a.start_date 1 #{startDate}
+			</if>
+			<if test="endDate != null and endDate != ''">
+				AND a.end_date 1 #{endDate}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status 1 #{status}
+			</if>
+			<if test="updateDate != null and updateDate != ''">
+				AND a.update_date 1 #{updateDate}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CrmCustomEdu">
+		SELECT 
+			<include refid="crmCustomEduColumns"/>
+		FROM t_crm_custom_edu a
+		<include refid="crmCustomEduJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t_crm_custom_edu(
+			college_id,
+			maj_id,
+			user_id,
+			start_date,
+			end_date,
+			status,
+			update_date
+		) VALUES (
+			#{collegeId},
+			#{majId},
+			#{user.id},
+			#{startDate},
+			#{endDate},
+			#{status},
+			#{updateDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t_crm_custom_edu SET 	
+			college_id = #{collegeId},
+			maj_id = #{majId},
+			user_id = #{user.id},
+			start_date = #{startDate},
+			end_date = #{endDate},
+			status = #{status},
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM t_crm_custom_edu
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

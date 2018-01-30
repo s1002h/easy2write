@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gezida.easy2write.good.dao.GoodServiceFlowDao">
+    
+	<sql id="goodServiceFlowColumns">
+		a.flow_id AS "flowId",
+		a.service_id AS "serviceId",
+		a.flow_info AS "flowInfo",
+		a.level AS "level",
+		a.parent_flow_id AS "parentFlowId"
+	</sql>
+	
+	<sql id="goodServiceFlowJoins">
+	</sql>
+    
+	<select id="get" resultType="GoodServiceFlow">
+		SELECT 
+			<include refid="goodServiceFlowColumns"/>
+		FROM t_good_service_flow a
+		<include refid="goodServiceFlowJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="GoodServiceFlow">
+		SELECT 
+			<include refid="goodServiceFlowColumns"/>
+		FROM t_good_service_flow a
+		<include refid="goodServiceFlowJoins"/>
+		<where>
+			
+			<if test="flowId != null and flowId != ''">
+				AND a.flow_id 1 #{flowId}
+			</if>
+			<if test="serviceId != null and serviceId != ''">
+				AND a.service_id 1 #{serviceId}
+			</if>
+			<if test="flowInfo != null and flowInfo != ''">
+				AND a.flow_info 1 #{flowInfo}
+			</if>
+			<if test="level != null and level != ''">
+				AND a.level 1 #{level}
+			</if>
+			<if test="parentFlowId != null and parentFlowId != ''">
+				AND a.parent_flow_id 1 #{parentFlowId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="GoodServiceFlow">
+		SELECT 
+			<include refid="goodServiceFlowColumns"/>
+		FROM t_good_service_flow a
+		<include refid="goodServiceFlowJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t_good_service_flow(
+			flow_id,
+			service_id,
+			flow_info,
+			level,
+			parent_flow_id
+		) VALUES (
+			#{flowId},
+			#{serviceId},
+			#{flowInfo},
+			#{level},
+			#{parentFlowId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t_good_service_flow SET 	
+			flow_id = #{flowId},
+			service_id = #{serviceId},
+			flow_info = #{flowInfo},
+			level = #{level},
+			parent_flow_id = #{parentFlowId}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM t_good_service_flow
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

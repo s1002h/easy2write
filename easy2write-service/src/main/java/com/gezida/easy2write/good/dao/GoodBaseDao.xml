@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gezida.easy2write.good.dao.GoodBaseDao">
+    
+	<sql id="goodBaseColumns">
+		a.good_id AS "goodId",
+		a.service_id AS "serviceId",
+		a.major_id AS "majorId",
+		a.user_id AS "user.id",
+		a.create_date AS "createDate",
+		a.update_date AS "updateDate",
+		a.onoff AS "onoff",
+		u4.name AS "user.name"
+	</sql>
+	
+	<sql id="goodBaseJoins">
+		LEFT JOIN t_crm_customer u4 ON u4.user_id = a.user_id
+	</sql>
+    
+	<select id="get" resultType="GoodBase">
+		SELECT 
+			<include refid="goodBaseColumns"/>
+		FROM t_good_base a
+		<include refid="goodBaseJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="GoodBase">
+		SELECT 
+			<include refid="goodBaseColumns"/>
+		FROM t_good_base a
+		<include refid="goodBaseJoins"/>
+		<where>
+			
+			<if test="goodId != null and goodId != ''">
+				AND a.good_id 1 #{goodId}
+			</if>
+			<if test="serviceId != null and serviceId != ''">
+				AND a.service_id 1 #{serviceId}
+			</if>
+			<if test="majorId != null and majorId != ''">
+				AND a.major_id 1 #{majorId}
+			</if>
+			<if test="user != null and user.id != null and user.id != ''">
+				AND a.user_id 1 #{user.id}
+			</if>
+			<if test="createDate != null and createDate != ''">
+				AND a.create_date 1 #{createDate}
+			</if>
+			<if test="updateDate != null and updateDate != ''">
+				AND a.update_date 1 #{updateDate}
+			</if>
+			<if test="onoff != null and onoff != ''">
+				AND a.onoff 1 #{onoff}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="GoodBase">
+		SELECT 
+			<include refid="goodBaseColumns"/>
+		FROM t_good_base a
+		<include refid="goodBaseJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t_good_base(
+			good_id,
+			service_id,
+			major_id,
+			user_id,
+			create_date,
+			update_date,
+			onoff
+		) VALUES (
+			#{goodId},
+			#{serviceId},
+			#{majorId},
+			#{user.id},
+			#{createDate},
+			#{updateDate},
+			#{onoff}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t_good_base SET 	
+			good_id = #{goodId},
+			service_id = #{serviceId},
+			major_id = #{majorId},
+			user_id = #{user.id},
+			update_date = #{updateDate},
+			onoff = #{onoff}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM t_good_base
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

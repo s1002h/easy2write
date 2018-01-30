@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gezida.easy2write.crm.dao.CrmCustomerDao">
+    
+	<sql id="crmCustomerColumns">
+		a.user_id AS "user.id",
+		a.login_name AS "loginName",
+		a.password AS "password",
+		a.name AS "name",
+		a.is_tutor AS "isTutor",
+		a.is_student AS "isStudent",
+		a.is_sys AS "isSys",
+		a.sex AS "sex",
+		a.province AS "province",
+		a.city AS "city",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.onoff AS "onoff",
+		u1.name AS "user.name"
+	</sql>
+	
+	<sql id="crmCustomerJoins">
+		LEFT JOIN t_crm_customer u1 ON u1.user_id = a.user_id
+	</sql>
+    
+	<select id="get" resultType="CrmCustomer">
+		SELECT 
+			<include refid="crmCustomerColumns"/>
+		FROM t_crm_customer a
+		<include refid="crmCustomerJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CrmCustomer">
+		SELECT 
+			<include refid="crmCustomerColumns"/>
+		FROM t_crm_customer a
+		<include refid="crmCustomerJoins"/>
+		<where>
+			
+			<if test="user != null and user.id != null and user.id != ''">
+				AND a.user_id 1 #{user.id}
+			</if>
+			<if test="loginName != null and loginName != ''">
+				AND a.login_name 1 #{loginName}
+			</if>
+			<if test="password != null and password != ''">
+				AND a.password 1 #{password}
+			</if>
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+			<if test="isTutor != null and isTutor != ''">
+				AND a.is_tutor 1 #{isTutor}
+			</if>
+			<if test="isStudent != null and isStudent != ''">
+				AND a.is_student 1 #{isStudent}
+			</if>
+			<if test="isSys != null and isSys != ''">
+				AND a.is_sys 1 #{isSys}
+			</if>
+			<if test="sex != null and sex != ''">
+				AND a.sex 1 #{sex}
+			</if>
+			<if test="province != null and province != ''">
+				AND a.province 1 #{province}
+			</if>
+			<if test="city != null and city != ''">
+				AND a.city 1 #{city}
+			</if>
+			<if test="createBy != null and createBy.id != null and createBy.id != ''">
+				AND a.create_by 1 #{createBy.id}
+			</if>
+			<if test="createDate != null and createDate != ''">
+				AND a.create_date 1 #{createDate}
+			</if>
+			<if test="updateBy != null and updateBy.id != null and updateBy.id != ''">
+				AND a.update_by 1 #{updateBy.id}
+			</if>
+			<if test="updateDate != null and updateDate != ''">
+				AND a.update_date 1 #{updateDate}
+			</if>
+			<if test="onoff != null and onoff != ''">
+				AND a.onoff 1 #{onoff}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CrmCustomer">
+		SELECT 
+			<include refid="crmCustomerColumns"/>
+		FROM t_crm_customer a
+		<include refid="crmCustomerJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t_crm_customer(
+			user_id,
+			login_name,
+			password,
+			name,
+			is_tutor,
+			is_student,
+			is_sys,
+			sex,
+			province,
+			city,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			onoff
+		) VALUES (
+			#{user.id},
+			#{loginName},
+			#{password},
+			#{name},
+			#{isTutor},
+			#{isStudent},
+			#{isSys},
+			#{sex},
+			#{province},
+			#{city},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{onoff}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t_crm_customer SET 	
+			user_id = #{user.id},
+			login_name = #{loginName},
+			password = #{password},
+			name = #{name},
+			is_tutor = #{isTutor},
+			is_student = #{isStudent},
+			is_sys = #{isSys},
+			sex = #{sex},
+			province = #{province},
+			city = #{city},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			onoff = #{onoff}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM t_crm_customer
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

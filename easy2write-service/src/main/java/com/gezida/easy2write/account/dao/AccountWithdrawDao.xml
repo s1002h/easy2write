@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gezida.easy2write.account.dao.AccountWithdrawDao">
+    
+	<sql id="accountWithdrawColumns">
+		a.提现记录id AS "提现记录id",
+		a.account_id AS "accountId",
+		a.alipay_id AS "alipayId",
+		a.num__withdraw AS "numWithdraw",
+		a.withdraw_date AS "withdrawDate",
+		a.status AS "status",
+		a.audit_reason AS "auditReason"
+	</sql>
+	
+	<sql id="accountWithdrawJoins">
+	</sql>
+    
+	<select id="get" resultType="AccountWithdraw">
+		SELECT 
+			<include refid="accountWithdrawColumns"/>
+		FROM t_account_withdraw a
+		<include refid="accountWithdrawJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="AccountWithdraw">
+		SELECT 
+			<include refid="accountWithdrawColumns"/>
+		FROM t_account_withdraw a
+		<include refid="accountWithdrawJoins"/>
+		<where>
+			
+			<if test="提现记录id != null and 提现记录id != ''">
+				AND a.提现记录id 1 #{提现记录id}
+			</if>
+			<if test="accountId != null and accountId != ''">
+				AND a.account_id 1 #{accountId}
+			</if>
+			<if test="alipayId != null and alipayId != ''">
+				AND a.alipay_id 1 #{alipayId}
+			</if>
+			<if test="numWithdraw != null and numWithdraw != ''">
+				AND a.num__withdraw 1 #{numWithdraw}
+			</if>
+			<if test="withdrawDate != null and withdrawDate != ''">
+				AND a.withdraw_date 1 #{withdrawDate}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status 1 #{status}
+			</if>
+			<if test="auditReason != null and auditReason != ''">
+				AND a.audit_reason 1 #{auditReason}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="AccountWithdraw">
+		SELECT 
+			<include refid="accountWithdrawColumns"/>
+		FROM t_account_withdraw a
+		<include refid="accountWithdrawJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t_account_withdraw(
+			提现记录id,
+			account_id,
+			alipay_id,
+			num__withdraw,
+			withdraw_date,
+			status,
+			audit_reason
+		) VALUES (
+			#{提现记录id},
+			#{accountId},
+			#{alipayId},
+			#{numWithdraw},
+			#{withdrawDate},
+			#{status},
+			#{auditReason}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t_account_withdraw SET 	
+			提现记录id = #{提现记录id},
+			account_id = #{accountId},
+			alipay_id = #{alipayId},
+			num__withdraw = #{numWithdraw},
+			withdraw_date = #{withdrawDate},
+			status = #{status},
+			audit_reason = #{auditReason}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM t_account_withdraw
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

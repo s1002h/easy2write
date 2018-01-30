@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gezida.easy2write.order.dao.OrderScoreDao">
+    
+	<sql id="orderScoreColumns">
+		a.score_id AS "scoreId",
+		a.order_id AS "orderId",
+		a.ord_order_id AS "ordOrderId",
+		a.score_value AS "scoreValue",
+		a.score_info AS "scoreInfo",
+		a.score_tag AS "scoreTag",
+		a.create_date AS "createDate",
+		a.reply_info AS "replyInfo",
+		a.reply_date AS "replyDate",
+		a.delete_flag AS "deleteFlag",
+		a.delete_cause AS "deleteCause"
+	</sql>
+	
+	<sql id="orderScoreJoins">
+	</sql>
+    
+	<select id="get" resultType="OrderScore">
+		SELECT 
+			<include refid="orderScoreColumns"/>
+		FROM t_order_score a
+		<include refid="orderScoreJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="OrderScore">
+		SELECT 
+			<include refid="orderScoreColumns"/>
+		FROM t_order_score a
+		<include refid="orderScoreJoins"/>
+		<where>
+			
+			<if test="scoreId != null and scoreId != ''">
+				AND a.score_id 1 #{scoreId}
+			</if>
+			<if test="orderId != null and orderId != ''">
+				AND a.order_id 1 #{orderId}
+			</if>
+			<if test="ordOrderId != null and ordOrderId != ''">
+				AND a.ord_order_id 1 #{ordOrderId}
+			</if>
+			<if test="scoreValue != null and scoreValue != ''">
+				AND a.score_value 1 #{scoreValue}
+			</if>
+			<if test="scoreInfo != null and scoreInfo != ''">
+				AND a.score_info 1 #{scoreInfo}
+			</if>
+			<if test="scoreTag != null and scoreTag != ''">
+				AND a.score_tag 1 #{scoreTag}
+			</if>
+			<if test="createDate != null and createDate != ''">
+				AND a.create_date 1 #{createDate}
+			</if>
+			<if test="replyInfo != null and replyInfo != ''">
+				AND a.reply_info 1 #{replyInfo}
+			</if>
+			<if test="replyDate != null and replyDate != ''">
+				AND a.reply_date 1 #{replyDate}
+			</if>
+			<if test="deleteFlag != null and deleteFlag != ''">
+				AND a.delete_flag 1 #{deleteFlag}
+			</if>
+			<if test="deleteCause != null and deleteCause != ''">
+				AND a.delete_cause 1 #{deleteCause}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="OrderScore">
+		SELECT 
+			<include refid="orderScoreColumns"/>
+		FROM t_order_score a
+		<include refid="orderScoreJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t_order_score(
+			score_id,
+			order_id,
+			ord_order_id,
+			score_value,
+			score_info,
+			score_tag,
+			create_date,
+			reply_info,
+			reply_date,
+			delete_flag,
+			delete_cause
+		) VALUES (
+			#{scoreId},
+			#{orderId},
+			#{ordOrderId},
+			#{scoreValue},
+			#{scoreInfo},
+			#{scoreTag},
+			#{createDate},
+			#{replyInfo},
+			#{replyDate},
+			#{deleteFlag},
+			#{deleteCause}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t_order_score SET 	
+			score_id = #{scoreId},
+			order_id = #{orderId},
+			ord_order_id = #{ordOrderId},
+			score_value = #{scoreValue},
+			score_info = #{scoreInfo},
+			score_tag = #{scoreTag},
+			reply_info = #{replyInfo},
+			reply_date = #{replyDate},
+			delete_flag = #{deleteFlag},
+			delete_cause = #{deleteCause}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM t_order_score
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

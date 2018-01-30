@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gezida.easy2write.common.dao.CommonParameterDao">
+    
+	<sql id="commonParameterColumns">
+		a.type AS "type",
+		a.parameter AS "parameter",
+		a.comment AS "comment",
+		a.value AS "value",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.onoff AS "onoff"
+	</sql>
+	
+	<sql id="commonParameterJoins">
+	</sql>
+    
+	<select id="get" resultType="CommonParameter">
+		SELECT 
+			<include refid="commonParameterColumns"/>
+		FROM t_common_parameter a
+		<include refid="commonParameterJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CommonParameter">
+		SELECT 
+			<include refid="commonParameterColumns"/>
+		FROM t_common_parameter a
+		<include refid="commonParameterJoins"/>
+		<where>
+			
+			<if test="type != null and type != ''">
+				AND a.type 1 #{type}
+			</if>
+			<if test="parameter != null and parameter != ''">
+				AND a.parameter 1 #{parameter}
+			</if>
+			<if test="comment != null and comment != ''">
+				AND a.comment 1 #{comment}
+			</if>
+			<if test="value != null and value != ''">
+				AND a.value 1 #{value}
+			</if>
+			<if test="createBy != null and createBy.id != null and createBy.id != ''">
+				AND a.create_by 1 #{createBy.id}
+			</if>
+			<if test="createDate != null and createDate != ''">
+				AND a.create_date 1 #{createDate}
+			</if>
+			<if test="updateBy != null and updateBy.id != null and updateBy.id != ''">
+				AND a.update_by 1 #{updateBy.id}
+			</if>
+			<if test="updateDate != null and updateDate != ''">
+				AND a.update_date 1 #{updateDate}
+			</if>
+			<if test="onoff != null and onoff != ''">
+				AND a.onoff 1 #{onoff}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CommonParameter">
+		SELECT 
+			<include refid="commonParameterColumns"/>
+		FROM t_common_parameter a
+		<include refid="commonParameterJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t_common_parameter(
+			type,
+			parameter,
+			comment,
+			value,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			onoff
+		) VALUES (
+			#{type},
+			#{parameter},
+			#{comment},
+			#{value},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{onoff}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t_common_parameter SET 	
+			type = #{type},
+			parameter = #{parameter},
+			comment = #{comment},
+			value = #{value},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			onoff = #{onoff}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM t_common_parameter
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

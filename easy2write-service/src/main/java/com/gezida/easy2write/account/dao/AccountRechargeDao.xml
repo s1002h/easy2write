@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gezida.easy2write.account.dao.AccountRechargeDao">
+    
+	<sql id="accountRechargeColumns">
+		a.record_id AS "recordId",
+		a.account_id AS "accountId",
+		a.money_num AS "moneyNum",
+		a.point_num AS "pointNum",
+		a.create_at AS "createAt",
+		a.type AS "type"
+	</sql>
+	
+	<sql id="accountRechargeJoins">
+	</sql>
+    
+	<select id="get" resultType="AccountRecharge">
+		SELECT 
+			<include refid="accountRechargeColumns"/>
+		FROM t_account_recharge a
+		<include refid="accountRechargeJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="AccountRecharge">
+		SELECT 
+			<include refid="accountRechargeColumns"/>
+		FROM t_account_recharge a
+		<include refid="accountRechargeJoins"/>
+		<where>
+			
+			<if test="recordId != null and recordId != ''">
+				AND a.record_id 1 #{recordId}
+			</if>
+			<if test="accountId != null and accountId != ''">
+				AND a.account_id 1 #{accountId}
+			</if>
+			<if test="moneyNum != null and moneyNum != ''">
+				AND a.money_num 1 #{moneyNum}
+			</if>
+			<if test="pointNum != null and pointNum != ''">
+				AND a.point_num 1 #{pointNum}
+			</if>
+			<if test="createAt != null and createAt != ''">
+				AND a.create_at 1 #{createAt}
+			</if>
+			<if test="type != null and type != ''">
+				AND a.type 1 #{type}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="AccountRecharge">
+		SELECT 
+			<include refid="accountRechargeColumns"/>
+		FROM t_account_recharge a
+		<include refid="accountRechargeJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t_account_recharge(
+			record_id,
+			account_id,
+			money_num,
+			point_num,
+			create_at,
+			type
+		) VALUES (
+			#{recordId},
+			#{accountId},
+			#{moneyNum},
+			#{pointNum},
+			#{createAt},
+			#{type}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t_account_recharge SET 	
+			record_id = #{recordId},
+			account_id = #{accountId},
+			money_num = #{moneyNum},
+			point_num = #{pointNum},
+			create_at = #{createAt},
+			type = #{type}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM t_account_recharge
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

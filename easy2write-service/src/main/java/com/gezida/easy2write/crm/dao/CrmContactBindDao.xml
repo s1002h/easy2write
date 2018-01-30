@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gezida.easy2write.crm.dao.CrmContactBindDao">
+    
+	<sql id="crmContactBindColumns">
+		a.contact_id AS "contactId",
+		a.user_id AS "user.id",
+		a.contact_type AS "contactType",
+		a.contact AS "contact",
+		a.bind_date AS "bindDate",
+		u2.name AS "user.name"
+	</sql>
+	
+	<sql id="crmContactBindJoins">
+		LEFT JOIN t_crm_customer u2 ON u2.user_id = a.user_id
+	</sql>
+    
+	<select id="get" resultType="CrmContactBind">
+		SELECT 
+			<include refid="crmContactBindColumns"/>
+		FROM t_crm_contact_bind a
+		<include refid="crmContactBindJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CrmContactBind">
+		SELECT 
+			<include refid="crmContactBindColumns"/>
+		FROM t_crm_contact_bind a
+		<include refid="crmContactBindJoins"/>
+		<where>
+			
+			<if test="contactId != null and contactId != ''">
+				AND a.contact_id 1 #{contactId}
+			</if>
+			<if test="user != null and user.id != null and user.id != ''">
+				AND a.user_id 1 #{user.id}
+			</if>
+			<if test="contactType != null and contactType != ''">
+				AND a.contact_type 1 #{contactType}
+			</if>
+			<if test="contact != null and contact != ''">
+				AND a.contact 1 #{contact}
+			</if>
+			<if test="bindDate != null and bindDate != ''">
+				AND a.bind_date 1 #{bindDate}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CrmContactBind">
+		SELECT 
+			<include refid="crmContactBindColumns"/>
+		FROM t_crm_contact_bind a
+		<include refid="crmContactBindJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t_crm_contact_bind(
+			contact_id,
+			user_id,
+			contact_type,
+			contact,
+			bind_date
+		) VALUES (
+			#{contactId},
+			#{user.id},
+			#{contactType},
+			#{contact},
+			#{bindDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t_crm_contact_bind SET 	
+			contact_id = #{contactId},
+			user_id = #{user.id},
+			contact_type = #{contactType},
+			contact = #{contact},
+			bind_date = #{bindDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM t_crm_contact_bind
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

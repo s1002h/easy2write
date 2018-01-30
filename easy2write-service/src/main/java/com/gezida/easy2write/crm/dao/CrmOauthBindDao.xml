@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gezida.easy2write.crm.dao.CrmOauthBindDao">
+    
+	<sql id="crmOauthBindColumns">
+		a.bind_id AS "bindId",
+		a.user_id AS "user.id",
+		a.oauth_id AS "oauthId",
+		a.oauth_nickname AS "oauthNickname",
+		a.oauth_type AS "oauthType",
+		a.bind_date AS "bindDate",
+		u2.name AS "user.name"
+	</sql>
+	
+	<sql id="crmOauthBindJoins">
+		LEFT JOIN t_crm_customer u2 ON u2.user_id = a.user_id
+	</sql>
+    
+	<select id="get" resultType="CrmOauthBind">
+		SELECT 
+			<include refid="crmOauthBindColumns"/>
+		FROM t_crm_oauth_bind a
+		<include refid="crmOauthBindJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CrmOauthBind">
+		SELECT 
+			<include refid="crmOauthBindColumns"/>
+		FROM t_crm_oauth_bind a
+		<include refid="crmOauthBindJoins"/>
+		<where>
+			
+			<if test="bindId != null and bindId != ''">
+				AND a.bind_id 1 #{bindId}
+			</if>
+			<if test="user != null and user.id != null and user.id != ''">
+				AND a.user_id 1 #{user.id}
+			</if>
+			<if test="oauthId != null and oauthId != ''">
+				AND a.oauth_id 1 #{oauthId}
+			</if>
+			<if test="oauthNickname != null and oauthNickname != ''">
+				AND a.oauth_nickname 1 #{oauthNickname}
+			</if>
+			<if test="oauthType != null and oauthType != ''">
+				AND a.oauth_type 1 #{oauthType}
+			</if>
+			<if test="bindDate != null and bindDate != ''">
+				AND a.bind_date 1 #{bindDate}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CrmOauthBind">
+		SELECT 
+			<include refid="crmOauthBindColumns"/>
+		FROM t_crm_oauth_bind a
+		<include refid="crmOauthBindJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t_crm_oauth_bind(
+			bind_id,
+			user_id,
+			oauth_id,
+			oauth_nickname,
+			oauth_type,
+			bind_date
+		) VALUES (
+			#{bindId},
+			#{user.id},
+			#{oauthId},
+			#{oauthNickname},
+			#{oauthType},
+			#{bindDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t_crm_oauth_bind SET 	
+			bind_id = #{bindId},
+			user_id = #{user.id},
+			oauth_id = #{oauthId},
+			oauth_nickname = #{oauthNickname},
+			oauth_type = #{oauthType},
+			bind_date = #{bindDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM t_crm_oauth_bind
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

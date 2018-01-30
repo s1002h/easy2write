@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gezida.easy2write.order.dao.OrderBaseDao">
+    
+	<sql id="orderBaseColumns">
+		a.order_id AS "orderId",
+		a.order_num AS "orderNum",
+		a.id AS "id",
+		a.user_id AS "user.id",
+		a.crm_user_id AS "crmUserId",
+		a.pay_money AS "payMoney",
+		a.pay_status AS "payStatus",
+		a.settlement_money AS "settlementMoney",
+		a.current_user_id AS "currentUserId",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.onoff AS "onoff",
+		u4.name AS "user.name"
+	</sql>
+	
+	<sql id="orderBaseJoins">
+		LEFT JOIN t_crm_customer u4 ON u4.user_id = a.user_id
+	</sql>
+    
+	<select id="get" resultType="OrderBase">
+		SELECT 
+			<include refid="orderBaseColumns"/>
+		FROM t_order_base a
+		<include refid="orderBaseJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="OrderBase">
+		SELECT 
+			<include refid="orderBaseColumns"/>
+		FROM t_order_base a
+		<include refid="orderBaseJoins"/>
+		<where>
+			
+			<if test="orderId != null and orderId != ''">
+				AND a.order_id 1 #{orderId}
+			</if>
+			<if test="orderNum != null and orderNum != ''">
+				AND a.order_num 1 #{orderNum}
+			</if>
+			<if test="id != null and id != ''">
+				AND a.id 1 #{id}
+			</if>
+			<if test="user != null and user.id != null and user.id != ''">
+				AND a.user_id 1 #{user.id}
+			</if>
+			<if test="crmUserId != null and crmUserId != ''">
+				AND a.crm_user_id 1 #{crmUserId}
+			</if>
+			<if test="payMoney != null and payMoney != ''">
+				AND a.pay_money 1 #{payMoney}
+			</if>
+			<if test="payStatus != null and payStatus != ''">
+				AND a.pay_status 1 #{payStatus}
+			</if>
+			<if test="settlementMoney != null and settlementMoney != ''">
+				AND a.settlement_money 1 #{settlementMoney}
+			</if>
+			<if test="currentUserId != null and currentUserId != ''">
+				AND a.current_user_id 1 #{currentUserId}
+			</if>
+			<if test="createDate != null and createDate != ''">
+				AND a.create_date 1 #{createDate}
+			</if>
+			<if test="updateBy != null and updateBy.id != null and updateBy.id != ''">
+				AND a.update_by 1 #{updateBy.id}
+			</if>
+			<if test="updateDate != null and updateDate != ''">
+				AND a.update_date 1 #{updateDate}
+			</if>
+			<if test="onoff != null and onoff != ''">
+				AND a.onoff 1 #{onoff}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="OrderBase">
+		SELECT 
+			<include refid="orderBaseColumns"/>
+		FROM t_order_base a
+		<include refid="orderBaseJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t_order_base(
+			order_id,
+			order_num,
+			id,
+			user_id,
+			crm_user_id,
+			pay_money,
+			pay_status,
+			settlement_money,
+			current_user_id,
+			create_date,
+			update_by,
+			update_date,
+			onoff
+		) VALUES (
+			#{orderId},
+			#{orderNum},
+			#{id},
+			#{user.id},
+			#{crmUserId},
+			#{payMoney},
+			#{payStatus},
+			#{settlementMoney},
+			#{currentUserId},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{onoff}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t_order_base SET 	
+			order_id = #{orderId},
+			order_num = #{orderNum},
+			user_id = #{user.id},
+			crm_user_id = #{crmUserId},
+			pay_money = #{payMoney},
+			pay_status = #{payStatus},
+			settlement_money = #{settlementMoney},
+			current_user_id = #{currentUserId},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			onoff = #{onoff}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM t_order_base
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

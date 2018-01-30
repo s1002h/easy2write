@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gezida.easy2write.order.dao.OrderPayDao">
+    
+	<sql id="orderPayColumns">
+		a.pay_id AS "payId",
+		a.pay_num AS "payNum",
+		a.order_id AS "orderId",
+		a.from_account_id AS "fromAccountId",
+		a.to_account_id AS "toAccountId",
+		a.pay_amount AS "payAmount"
+	</sql>
+	
+	<sql id="orderPayJoins">
+	</sql>
+    
+	<select id="get" resultType="OrderPay">
+		SELECT 
+			<include refid="orderPayColumns"/>
+		FROM t_order_pay a
+		<include refid="orderPayJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="OrderPay">
+		SELECT 
+			<include refid="orderPayColumns"/>
+		FROM t_order_pay a
+		<include refid="orderPayJoins"/>
+		<where>
+			
+			<if test="payId != null and payId != ''">
+				AND a.pay_id 1 #{payId}
+			</if>
+			<if test="payNum != null and payNum != ''">
+				AND a.pay_num 1 #{payNum}
+			</if>
+			<if test="orderId != null and orderId != ''">
+				AND a.order_id 1 #{orderId}
+			</if>
+			<if test="fromAccountId != null and fromAccountId != ''">
+				AND a.from_account_id 1 #{fromAccountId}
+			</if>
+			<if test="toAccountId != null and toAccountId != ''">
+				AND a.to_account_id 1 #{toAccountId}
+			</if>
+			<if test="payAmount != null and payAmount != ''">
+				AND a.pay_amount 1 #{payAmount}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="OrderPay">
+		SELECT 
+			<include refid="orderPayColumns"/>
+		FROM t_order_pay a
+		<include refid="orderPayJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t_order_pay(
+			pay_id,
+			pay_num,
+			order_id,
+			from_account_id,
+			to_account_id,
+			pay_amount
+		) VALUES (
+			#{payId},
+			#{payNum},
+			#{orderId},
+			#{fromAccountId},
+			#{toAccountId},
+			#{payAmount}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t_order_pay SET 	
+			pay_id = #{payId},
+			pay_num = #{payNum},
+			order_id = #{orderId},
+			from_account_id = #{fromAccountId},
+			to_account_id = #{toAccountId},
+			pay_amount = #{payAmount}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM t_order_pay
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

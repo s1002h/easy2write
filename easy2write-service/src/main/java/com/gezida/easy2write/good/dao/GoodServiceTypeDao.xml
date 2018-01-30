@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gezida.easy2write.good.dao.GoodServiceTypeDao">
+    
+	<sql id="goodServiceTypeColumns">
+		a.service_type_id AS "serviceTypeId",
+		a.service_name AS "serviceName",
+		a.sevice_desc AS "seviceDesc",
+		a.price_lowest AS "priceLowest",
+		a.price_highest AS "priceHighest",
+		a.create_at AS "createAt",
+		a.create_user_id AS "createUserId",
+		a.status AS "status",
+		a.update_at AS "updateAt",
+		a.update_user_id AS "updateUserId"
+	</sql>
+	
+	<sql id="goodServiceTypeJoins">
+	</sql>
+    
+	<select id="get" resultType="GoodServiceType">
+		SELECT 
+			<include refid="goodServiceTypeColumns"/>
+		FROM t_good_service_type a
+		<include refid="goodServiceTypeJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="GoodServiceType">
+		SELECT 
+			<include refid="goodServiceTypeColumns"/>
+		FROM t_good_service_type a
+		<include refid="goodServiceTypeJoins"/>
+		<where>
+			
+			<if test="serviceTypeId != null and serviceTypeId != ''">
+				AND a.service_type_id 1 #{serviceTypeId}
+			</if>
+			<if test="serviceName != null and serviceName != ''">
+				AND a.service_name 1 #{serviceName}
+			</if>
+			<if test="seviceDesc != null and seviceDesc != ''">
+				AND a.sevice_desc 1 #{seviceDesc}
+			</if>
+			<if test="priceLowest != null and priceLowest != ''">
+				AND a.price_lowest 1 #{priceLowest}
+			</if>
+			<if test="priceHighest != null and priceHighest != ''">
+				AND a.price_highest 1 #{priceHighest}
+			</if>
+			<if test="createAt != null and createAt != ''">
+				AND a.create_at 1 #{createAt}
+			</if>
+			<if test="createUserId != null and createUserId != ''">
+				AND a.create_user_id 1 #{createUserId}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status 1 #{status}
+			</if>
+			<if test="updateAt != null and updateAt != ''">
+				AND a.update_at 1 #{updateAt}
+			</if>
+			<if test="updateUserId != null and updateUserId != ''">
+				AND a.update_user_id 1 #{updateUserId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="GoodServiceType">
+		SELECT 
+			<include refid="goodServiceTypeColumns"/>
+		FROM t_good_service_type a
+		<include refid="goodServiceTypeJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t_good_service_type(
+			service_type_id,
+			service_name,
+			sevice_desc,
+			price_lowest,
+			price_highest,
+			create_at,
+			create_user_id,
+			status,
+			update_at,
+			update_user_id
+		) VALUES (
+			#{serviceTypeId},
+			#{serviceName},
+			#{seviceDesc},
+			#{priceLowest},
+			#{priceHighest},
+			#{createAt},
+			#{createUserId},
+			#{status},
+			#{updateAt},
+			#{updateUserId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t_good_service_type SET 	
+			service_type_id = #{serviceTypeId},
+			service_name = #{serviceName},
+			sevice_desc = #{seviceDesc},
+			price_lowest = #{priceLowest},
+			price_highest = #{priceHighest},
+			create_at = #{createAt},
+			create_user_id = #{createUserId},
+			status = #{status},
+			update_at = #{updateAt},
+			update_user_id = #{updateUserId}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM t_good_service_type
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

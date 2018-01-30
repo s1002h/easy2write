@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<template>
+	<name>ftlList</name>
+	<filePath>src/main/webapp/WEB-INF/views/${lastPackageName}/${moduleName}/${subModuleName}</filePath>
+	<fileName>${className}List.ftl</fileName>
+	<content><![CDATA[
+<html>
+<head>
+	<title>${functionNameSimple}管理</title>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			
+		});
+		function page(n,s){
+			$("#pageNo").val(n);
+			$("#pageSize").val(s);
+			$("#searchForm").submit();
+        	return false;
+        }
+	</script>
+</head>
+<body>
+	<ul class="nav nav-tabs">
+		<li class="active"><a href="/${urlPrefix}/">${functionNameSimple}列表</a></li>
+		<li><a href="/${urlPrefix}/form">${functionNameSimple}添加</a></li>
+	</ul>
+	<form:form id="searchForm" modelAttribute="${className}" action="/${urlPrefix}/" method="post" class="breadcrumb form-search">
+		<input id="pageNo" name="pageNo" type="hidden" value="${r"${page.pageNo}"}"/>
+		<input id="pageSize" name="pageSize" type="hidden" value="${r"${page.pageSize}"}"/>
+		<ul class="ul-form">
+		<#list table.columnList as c>
+			<#if c.isQuery?? && c.isQuery == "1">
+			<li><label>${c.comments}：</label>
+			<input path="${c.javaFieldId}" htmlEscape="false"<#if c.dataLength != "0"> maxlength="${c.dataLength}"</#if> class="input-medium"/>
+			</li>
+			</#if>
+		</#list>
+			<li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/></li>
+			<li class="clearfix"></li>
+		</ul>
+	</form:form>
+
+	<table id="contentTable" class="table table-striped table-bordered table-condensed">
+		<thead>
+			<tr>
+				<#list table.columnList as c>
+					<#if c.isList?? && c.isList == "1">
+				<th>${c.comments}</th>
+					</#if>
+				</#list>
+				<th>操作</th>
+			</tr>
+		</thead>
+		<tbody>
+		 ${r"<#list"} ${r"page.list"} as ${className} >
+			<tr>
+				
+				<#list table.columnList as c>
+					<#if c.isList?? && c.isList == "1">
+						<td>
+							<#if c_index = 0>
+								<a href="/${urlPrefix}/form?${c.javaFieldId}=${"${"+className}${"."+c.javaFieldId+"}"}">
+							</#if>
+							<#if c.showType == "userselect">
+								${"$"}{${className}.${c.javaFieldName}}
+							<#elseif c.showType == "dateselect">
+								${"$"}{${className}.${c.javaFieldId}?string("yyyy-MM-dd HH:mm:ss")}
+							<#else>
+								${"$"}{${className}.${c.javaFieldId}}
+							</#if>
+							
+							<#if c_index = 0>
+								</a>
+							</#if>
+						</td>
+						
+					</#if>
+					<#if !c_has_next>
+						<td>
+							<a href="/${urlPrefix}/form?${table.columnList[0].javaFieldId}=${"${"+className+"."}${table.columnList[0].javaFieldId+"}"}">修改</a>
+							<a href="/${urlPrefix}/delete?${table.columnList[0].javaFieldId}=${"${"+className+"."}${table.columnList[0].javaFieldId+"}"}" onclick="return confirmx('确认要删除该${functionNameSimple}吗？', this.href)">删除</a>
+						</td>
+					</#if>					
+				</#list>
+				
+    				
+				
+			</tr>
+		${r"</#list>"}
+		</tbody>
+	</table>
+	<div class="pagination">${r"${page}"}</div>
+</body>
+</html>]]>
+	</content>
+</template>

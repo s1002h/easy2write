@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gezida.easy2write.account.dao.AccountAlipayDao">
+    
+	<sql id="accountAlipayColumns">
+		a.alipay_id AS "alipayId",
+		a.account_id AS "accountId",
+		a.alipay_name AS "alipayName",
+		a.realname AS "realname",
+		a.alipay_account AS "alipayAccount"
+	</sql>
+	
+	<sql id="accountAlipayJoins">
+	</sql>
+    
+	<select id="get" resultType="AccountAlipay">
+		SELECT 
+			<include refid="accountAlipayColumns"/>
+		FROM t_account_alipay a
+		<include refid="accountAlipayJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="AccountAlipay">
+		SELECT 
+			<include refid="accountAlipayColumns"/>
+		FROM t_account_alipay a
+		<include refid="accountAlipayJoins"/>
+		<where>
+			
+			<if test="alipayId != null and alipayId != ''">
+				AND a.alipay_id 1 #{alipayId}
+			</if>
+			<if test="accountId != null and accountId != ''">
+				AND a.account_id 1 #{accountId}
+			</if>
+			<if test="alipayName != null and alipayName != ''">
+				AND a.alipay_name 1 #{alipayName}
+			</if>
+			<if test="realname != null and realname != ''">
+				AND a.realname 1 #{realname}
+			</if>
+			<if test="alipayAccount != null and alipayAccount != ''">
+				AND a.alipay_account 1 #{alipayAccount}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="AccountAlipay">
+		SELECT 
+			<include refid="accountAlipayColumns"/>
+		FROM t_account_alipay a
+		<include refid="accountAlipayJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t_account_alipay(
+			alipay_id,
+			account_id,
+			alipay_name,
+			realname,
+			alipay_account
+		) VALUES (
+			#{alipayId},
+			#{accountId},
+			#{alipayName},
+			#{realname},
+			#{alipayAccount}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t_account_alipay SET 	
+			alipay_id = #{alipayId},
+			account_id = #{accountId},
+			alipay_name = #{alipayName},
+			realname = #{realname},
+			alipay_account = #{alipayAccount}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM t_account_alipay
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

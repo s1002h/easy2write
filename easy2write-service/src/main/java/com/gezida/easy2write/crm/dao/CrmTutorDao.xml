@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gezida.easy2write.crm.dao.CrmTutorDao">
+    
+	<sql id="crmTutorColumns">
+		a.user_id AS "user.id",
+		a.tutor_office AS "tutorOffice",
+		a.verified AS "verified",
+		a.verified_file AS "verifiedFile",
+		a.major_good AS "majorGood",
+		a.summary AS "summary",
+		u1.name AS "user.name"
+	</sql>
+	
+	<sql id="crmTutorJoins">
+		LEFT JOIN t_crm_customer u1 ON u1.user_id = a.user_id
+	</sql>
+    
+	<select id="get" resultType="CrmTutor">
+		SELECT 
+			<include refid="crmTutorColumns"/>
+		FROM t_crm_tutor a
+		<include refid="crmTutorJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CrmTutor">
+		SELECT 
+			<include refid="crmTutorColumns"/>
+		FROM t_crm_tutor a
+		<include refid="crmTutorJoins"/>
+		<where>
+			
+			<if test="user != null and user.id != null and user.id != ''">
+				AND a.user_id 1 #{user.id}
+			</if>
+			<if test="tutorOffice != null and tutorOffice != ''">
+				AND a.tutor_office 1 #{tutorOffice}
+			</if>
+			<if test="verified != null and verified != ''">
+				AND a.verified 1 #{verified}
+			</if>
+			<if test="verifiedFile != null and verifiedFile != ''">
+				AND a.verified_file 1 #{verifiedFile}
+			</if>
+			<if test="majorGood != null and majorGood != ''">
+				AND a.major_good 1 #{majorGood}
+			</if>
+			<if test="summary != null and summary != ''">
+				AND a.summary 1 #{summary}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CrmTutor">
+		SELECT 
+			<include refid="crmTutorColumns"/>
+		FROM t_crm_tutor a
+		<include refid="crmTutorJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t_crm_tutor(
+			user_id,
+			tutor_office,
+			verified,
+			verified_file,
+			major_good,
+			summary
+		) VALUES (
+			#{user.id},
+			#{tutorOffice},
+			#{verified},
+			#{verifiedFile},
+			#{majorGood},
+			#{summary}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t_crm_tutor SET 	
+			user_id = #{user.id},
+			tutor_office = #{tutorOffice},
+			verified = #{verified},
+			verified_file = #{verifiedFile},
+			major_good = #{majorGood},
+			summary = #{summary}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM t_crm_tutor
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gezida.easy2write.message.dao.MessageNoticeDao">
+    
+	<sql id="messageNoticeColumns">
+		a.notice_id AS "noticeId",
+		a.notice_type AS "noticeType",
+		a.send_user_id AS "sendUserId",
+		a.receive_user_id AS "receiveUserId",
+		a.create_at AS "createAt",
+		a.message AS "message"
+	</sql>
+	
+	<sql id="messageNoticeJoins">
+	</sql>
+    
+	<select id="get" resultType="MessageNotice">
+		SELECT 
+			<include refid="messageNoticeColumns"/>
+		FROM t_message_notice a
+		<include refid="messageNoticeJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="MessageNotice">
+		SELECT 
+			<include refid="messageNoticeColumns"/>
+		FROM t_message_notice a
+		<include refid="messageNoticeJoins"/>
+		<where>
+			
+			<if test="noticeId != null and noticeId != ''">
+				AND a.notice_id 1 #{noticeId}
+			</if>
+			<if test="noticeType != null and noticeType != ''">
+				AND a.notice_type 1 #{noticeType}
+			</if>
+			<if test="sendUserId != null and sendUserId != ''">
+				AND a.send_user_id 1 #{sendUserId}
+			</if>
+			<if test="receiveUserId != null and receiveUserId != ''">
+				AND a.receive_user_id 1 #{receiveUserId}
+			</if>
+			<if test="createAt != null and createAt != ''">
+				AND a.create_at 1 #{createAt}
+			</if>
+			<if test="message != null and message != ''">
+				AND a.message 1 #{message}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="MessageNotice">
+		SELECT 
+			<include refid="messageNoticeColumns"/>
+		FROM t_message_notice a
+		<include refid="messageNoticeJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t_message_notice(
+			notice_id,
+			notice_type,
+			send_user_id,
+			receive_user_id,
+			create_at,
+			message
+		) VALUES (
+			#{noticeId},
+			#{noticeType},
+			#{sendUserId},
+			#{receiveUserId},
+			#{createAt},
+			#{message}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t_message_notice SET 	
+			notice_id = #{noticeId},
+			notice_type = #{noticeType},
+			send_user_id = #{sendUserId},
+			receive_user_id = #{receiveUserId},
+			create_at = #{createAt},
+			message = #{message}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM t_message_notice
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

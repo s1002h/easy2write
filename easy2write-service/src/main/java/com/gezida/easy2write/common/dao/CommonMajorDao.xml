@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gezida.easy2write.common.dao.CommonMajorDao">
+    
+	<sql id="commonMajorColumns">
+		a.major_id AS "majorId",
+		a.name AS "name",
+		a.code AS "code",
+		a.level AS "level",
+		a.parent_id AS "parent.id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.onoff AS "onoff"
+	</sql>
+	
+	<sql id="commonMajorJoins">
+	</sql>
+    
+	<select id="get" resultType="CommonMajor">
+		SELECT 
+			<include refid="commonMajorColumns"/>
+		FROM t_common_major a
+		<include refid="commonMajorJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CommonMajor">
+		SELECT 
+			<include refid="commonMajorColumns"/>
+		FROM t_common_major a
+		<include refid="commonMajorJoins"/>
+		<where>
+			
+			<if test="majorId != null and majorId != ''">
+				AND a.major_id 1 #{majorId}
+			</if>
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+			<if test="code != null and code != ''">
+				AND a.code 1 #{code}
+			</if>
+			<if test="level != null and level != ''">
+				AND a.level 1 #{level}
+			</if>
+			<if test="parent != null and parent.id != null and parent.id != ''">
+				AND a.parent_id 1 #{parent.id}
+			</if>
+			<if test="createBy != null and createBy.id != null and createBy.id != ''">
+				AND a.create_by 1 #{createBy.id}
+			</if>
+			<if test="createDate != null and createDate != ''">
+				AND a.create_date 1 #{createDate}
+			</if>
+			<if test="updateBy != null and updateBy.id != null and updateBy.id != ''">
+				AND a.update_by 1 #{updateBy.id}
+			</if>
+			<if test="updateDate != null and updateDate != ''">
+				AND a.update_date 1 #{updateDate}
+			</if>
+			<if test="onoff != null and onoff != ''">
+				AND a.onoff 1 #{onoff}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CommonMajor">
+		SELECT 
+			<include refid="commonMajorColumns"/>
+		FROM t_common_major a
+		<include refid="commonMajorJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t_common_major(
+			major_id,
+			name,
+			code,
+			level,
+			parent_id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			onoff
+		) VALUES (
+			#{majorId},
+			#{name},
+			#{code},
+			#{level},
+			#{parent.id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{onoff}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t_common_major SET 	
+			major_id = #{majorId},
+			name = #{name},
+			code = #{code},
+			level = #{level},
+			parent_id = #{parent.id},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			onoff = #{onoff}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM t_common_major
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

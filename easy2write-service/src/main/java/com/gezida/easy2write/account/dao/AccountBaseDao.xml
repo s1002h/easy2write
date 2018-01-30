@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gezida.easy2write.account.dao.AccountBaseDao">
+    
+	<sql id="accountBaseColumns">
+		a.account_id AS "accountId",
+		a.user_id AS "user.id",
+		a.balance_free AS "balanceFree",
+		a.balance_recharge AS "balanceRecharge",
+		a.balance AS "balance",
+		a.total_recharge AS "totalRecharge",
+		a.count_recharge AS "countRecharge",
+		a.total_free AS "totalFree",
+		a.count_free AS "countFree",
+		a.total_withdraw AS "totalWithdraw",
+		a.count_withdraw AS "countWithdraw",
+		u2.name AS "user.name"
+	</sql>
+	
+	<sql id="accountBaseJoins">
+		LEFT JOIN t_crm_customer u2 ON u2.user_id = a.user_id
+	</sql>
+    
+	<select id="get" resultType="AccountBase">
+		SELECT 
+			<include refid="accountBaseColumns"/>
+		FROM t_account_base a
+		<include refid="accountBaseJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="AccountBase">
+		SELECT 
+			<include refid="accountBaseColumns"/>
+		FROM t_account_base a
+		<include refid="accountBaseJoins"/>
+		<where>
+			
+			<if test="accountId != null and accountId != ''">
+				AND a.account_id 1 #{accountId}
+			</if>
+			<if test="user != null and user.id != null and user.id != ''">
+				AND a.user_id 1 #{user.id}
+			</if>
+			<if test="balanceFree != null and balanceFree != ''">
+				AND a.balance_free 1 #{balanceFree}
+			</if>
+			<if test="balanceRecharge != null and balanceRecharge != ''">
+				AND a.balance_recharge 1 #{balanceRecharge}
+			</if>
+			<if test="balance != null and balance != ''">
+				AND a.balance 1 #{balance}
+			</if>
+			<if test="totalRecharge != null and totalRecharge != ''">
+				AND a.total_recharge 1 #{totalRecharge}
+			</if>
+			<if test="countRecharge != null and countRecharge != ''">
+				AND a.count_recharge 1 #{countRecharge}
+			</if>
+			<if test="totalFree != null and totalFree != ''">
+				AND a.total_free 1 #{totalFree}
+			</if>
+			<if test="countFree != null and countFree != ''">
+				AND a.count_free 1 #{countFree}
+			</if>
+			<if test="totalWithdraw != null and totalWithdraw != ''">
+				AND a.total_withdraw 1 #{totalWithdraw}
+			</if>
+			<if test="countWithdraw != null and countWithdraw != ''">
+				AND a.count_withdraw 1 #{countWithdraw}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="AccountBase">
+		SELECT 
+			<include refid="accountBaseColumns"/>
+		FROM t_account_base a
+		<include refid="accountBaseJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t_account_base(
+			account_id,
+			user_id,
+			balance_free,
+			balance_recharge,
+			balance,
+			total_recharge,
+			count_recharge,
+			total_free,
+			count_free,
+			total_withdraw,
+			count_withdraw
+		) VALUES (
+			#{accountId},
+			#{user.id},
+			#{balanceFree},
+			#{balanceRecharge},
+			#{balance},
+			#{totalRecharge},
+			#{countRecharge},
+			#{totalFree},
+			#{countFree},
+			#{totalWithdraw},
+			#{countWithdraw}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t_account_base SET 	
+			account_id = #{accountId},
+			user_id = #{user.id},
+			balance_free = #{balanceFree},
+			balance_recharge = #{balanceRecharge},
+			balance = #{balance},
+			total_recharge = #{totalRecharge},
+			count_recharge = #{countRecharge},
+			total_free = #{totalFree},
+			count_free = #{countFree},
+			total_withdraw = #{totalWithdraw},
+			count_withdraw = #{countWithdraw}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM t_account_base
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

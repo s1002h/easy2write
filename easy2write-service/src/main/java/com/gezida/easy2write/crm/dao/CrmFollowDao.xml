@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gezida.easy2write.crm.dao.CrmFollowDao">
+    
+	<sql id="crmFollowColumns">
+		a.follow_user_id AS "followUserId",
+		a.befollow_user_id AS "befollowUserId",
+		a.create_at AS "createAt"
+	</sql>
+	
+	<sql id="crmFollowJoins">
+	</sql>
+    
+	<select id="get" resultType="CrmFollow">
+		SELECT 
+			<include refid="crmFollowColumns"/>
+		FROM t_crm_follow a
+		<include refid="crmFollowJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CrmFollow">
+		SELECT 
+			<include refid="crmFollowColumns"/>
+		FROM t_crm_follow a
+		<include refid="crmFollowJoins"/>
+		<where>
+			
+			<if test="followUserId != null and followUserId != ''">
+				AND a.follow_user_id 1 #{followUserId}
+			</if>
+			<if test="befollowUserId != null and befollowUserId != ''">
+				AND a.befollow_user_id 1 #{befollowUserId}
+			</if>
+			<if test="createAt != null and createAt != ''">
+				AND a.create_at 1 #{createAt}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CrmFollow">
+		SELECT 
+			<include refid="crmFollowColumns"/>
+		FROM t_crm_follow a
+		<include refid="crmFollowJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t_crm_follow(
+			follow_user_id,
+			befollow_user_id,
+			create_at
+		) VALUES (
+			#{followUserId},
+			#{befollowUserId},
+			#{createAt}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t_crm_follow SET 	
+			follow_user_id = #{followUserId},
+			befollow_user_id = #{befollowUserId},
+			create_at = #{createAt}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM t_crm_follow
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gezida.easy2write.account.dao.AccountFreeDao">
+    
+	<sql id="accountFreeColumns">
+		a.record_id AS "recordId",
+		a.account_id AS "accountId",
+		a.point AS "point",
+		a.point_event AS "pointEvent"
+	</sql>
+	
+	<sql id="accountFreeJoins">
+	</sql>
+    
+	<select id="get" resultType="AccountFree">
+		SELECT 
+			<include refid="accountFreeColumns"/>
+		FROM t_account_free a
+		<include refid="accountFreeJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="AccountFree">
+		SELECT 
+			<include refid="accountFreeColumns"/>
+		FROM t_account_free a
+		<include refid="accountFreeJoins"/>
+		<where>
+			
+			<if test="recordId != null and recordId != ''">
+				AND a.record_id 1 #{recordId}
+			</if>
+			<if test="accountId != null and accountId != ''">
+				AND a.account_id 1 #{accountId}
+			</if>
+			<if test="point != null and point != ''">
+				AND a.point 1 #{point}
+			</if>
+			<if test="pointEvent != null and pointEvent != ''">
+				AND a.point_event 1 #{pointEvent}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="AccountFree">
+		SELECT 
+			<include refid="accountFreeColumns"/>
+		FROM t_account_free a
+		<include refid="accountFreeJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t_account_free(
+			record_id,
+			account_id,
+			point,
+			point_event
+		) VALUES (
+			#{recordId},
+			#{accountId},
+			#{point},
+			#{pointEvent}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t_account_free SET 	
+			record_id = #{recordId},
+			account_id = #{accountId},
+			point = #{point},
+			point_event = #{pointEvent}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM t_account_free
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
